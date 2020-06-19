@@ -4,9 +4,8 @@
       <img :src="require(`../assets/${image}`)" :alt="image" />
     </div>
     <ul class="product-text">
-      <li>{{name}}</li>
-      <li>${{price}}</li>
-      <li>{{storage}}</li>
+      <li><strong>{{name}}</strong></li>
+      <li><strong>${{price}}({{storage}})</strong></li>
       <li>
         <slot></slot>
       </li>
@@ -27,10 +26,7 @@ export default {
 </script>
 
 <style scoped>
-.product-image {
-  width: 30%;
-}
-.product-text {
-  width: 60%;
+.product {
+  display: flex;
 }
 </style>

@@ -3,11 +3,16 @@
     <div id="productsContainer">
       <Products :products="products" @addProduct="addToProductsInCart" />
     </div>
-    <div class="cartContainer">
-      <Cart :products="productsInCart" @checkout="checkoutOrder" />
+    <div id="cartContainer">
+      <Cart
+        :products="productsInCart"
+        :totalPrice="totalPrice"
+        @checkout="checkoutOrder"
+        @removeProduct="removeProductFromCart"
+      />
     </div>
     <div class="orderSummaryContainer">
-      <OrderSummary :products ="productsInOrderSummary" />
+      <OrderSummary :products="productsInOrderSummary" :totalPrice="orderPrice" />
     </div>
   </div>
 </template>
@@ -16,13 +21,15 @@
 import Products from "./components/Products";
 import Cart from "./components/Cart";
 import OrderSummary from "./components/OrderSummary";
+import _ from "lodash";
 
 export default {
   name: "App",
   data() {
     return {
       productsInCart: [],
-      productsInOrderSummary: [],
+      productsInOrderSummary: {},
+      orderPrice: null,
       products: [
         {
           name: "Iphone 11 Pro (Silver)",
@@ -60,9 +67,22 @@ export default {
     addToProductsInCart: function(product) {
       this.productsInCart.push(product);
     },
+    removeProductFromCart: function(product) {
+      this.productsInCart = [
+        ..._.filter(this.productsInCart, function(p) {
+          return p !== product;
+        })
+      ];
+    },
     checkoutOrder: function() {
-      this.productsInOrderSummary = Array.from(this.productsInCart);
+      this.productsInOrderSummary = _.cloneDeep(this.productsInCart);
+      this.orderPrice = this.totalPrice;
       this.productsInCart = [];
+    }
+  },
+  computed: {
+    totalPrice: function() {
+      return _.sumBy(this.productsInCart, p => Number.parseInt(p.price));
     }
   }
 };
@@ -74,21 +94,32 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  margin-top: 60px;
 }
 #productsContainer {
-  width: 60%;
+  float: left;
+  width: 65%;
+}
+#productsContainer .product {
+  float: left;
+  width: 50%;
 }
 .products img {
   max-width: 100px;
 }
 .cart img {
-  max-width: 20px;
+  max-width: 50px;
+}
+.orderSummaryContainer img {
+  max-width: 50px;
 }
 #cartContainer {
-  width: 30%;
+  float: left;
+  width: 35%;
 }
-#orderSummaryContainer {
-  margin: 5px;
+li {
+  list-style-type: none;
+}
+h2 {
+  color: brown;
 }
 </style>

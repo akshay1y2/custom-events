@@ -1,5 +1,6 @@
 <template>
   <div class="products">
+    <h2>Products</h2>
     <Product
       v-for="product in products"
       :key="product.name"
@@ -26,4 +27,8 @@ export default {
 </script>
 
 <style scoped>
+.add-to-cart {
+  margin-top: 1em;
+  background-color: lightgreen;
+}
 </style>
